@@ -91,14 +91,14 @@ pipeline {
     }
 
     // Step 9: Run Docker Container
-    stage('Run Docker Container') {
-      steps {
-        script {
-          // Run the container with port mapping (9096)
-          bat "docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} ${IMAGE_NAME}:${VERSION}"
-        }
-      }
-    }
+    // stage('Run Docker Container') {
+    //   steps {
+    //     script {
+    //       // Run the container with port mapping (9096)
+    //       bat "docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} ${IMAGE_NAME}:${VERSION}"
+    //     }
+    //   }
+    // }
   }
 
   post {
