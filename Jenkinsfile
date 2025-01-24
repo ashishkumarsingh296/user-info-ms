@@ -26,7 +26,7 @@ pipeline {
     stage('Maven Build') {
       steps {
         script {
-          bat 'mvn clean package -DskipTests'
+          bat 'mvn clean package -DskipTests' // Skip tests during package stage
         }
       }
     }
@@ -35,7 +35,7 @@ pipeline {
     stage('Run Tests') {
       steps {
         script {
-          bat 'mvn test'
+          bat 'mvn test' // Run unit tests using Maven
         }
       }
     }
@@ -94,12 +94,11 @@ pipeline {
     stage('Run Docker Container') {
       steps {
         script {
-          // Run the container with port mapping (8761)
+          // Run the container with port mapping (9096)
           bat "docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} ${IMAGE_NAME}:${VERSION}"
         }
       }
     }
-
   }
 
   post {
@@ -107,7 +106,7 @@ pipeline {
     always {
       // Always run the following steps, no matter what
       echo 'Cleaning up workspace...'
-      deleteDir()  // Clean up workspace
+      deleteDir()  // Clean up workspace after completion
     }
 
     success {
