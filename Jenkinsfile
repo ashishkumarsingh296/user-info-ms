@@ -4,9 +4,9 @@ pipeline {
   environment {
     DOCKER_CREDENTIAL = credentials('DOCKER-CREDENTIAL')
     VERSION = "${env.BUILD_ID}"
-    IMAGE_NAME = 'ashishdevops1989/eureka-service'
-    CONTAINER_NAME = 'eureka-service-container'
-    PORT = '8761'
+    IMAGE_NAME = 'ashishdevops1989/user-info-service'
+    CONTAINER_NAME = 'user-info-service-container'
+    PORT = '9096'
   }
 
   tools {
@@ -18,7 +18,7 @@ pipeline {
     // Step 1: Checkout Latest Code
     stage('Checkout Code') {
       steps {
-        git url: 'https://github.com/ashishkumarsingh296/eureka-service.git', credentialsId: 'GITHUB-CREDS'
+        git url: 'https://github.com/ashishkumarsingh296/user-info-ms.git', credentialsId: 'GITHUB-CREDS'
       }
     }
 
