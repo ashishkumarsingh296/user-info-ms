@@ -9,7 +9,7 @@ eureka:
 spring:
   datasource:
     # If the MySQL container is part of the same Docker network, use the container name
-    url: jdbc:mysql://mysql-container:3306/userdb  # Use the container name and internal port 3306
+    url: jdbc:mysql://localhost:3306/userdb  # Use the container name and internal port 3306
     password: root
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver
