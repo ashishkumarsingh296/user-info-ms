@@ -21,7 +21,7 @@
 
 spring:
   datasource:
-    url: jdbc:postgresql://postgres:5432/postgres  # Use the service name 'postgres' as hostname
+    url: jdbc:postgresql://localhost:5432/postgres  # Use the service name 'postgres' as hostname
     username: postgres
     password: root
 
