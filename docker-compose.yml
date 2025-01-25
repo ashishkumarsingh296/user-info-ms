@@ -6,17 +6,20 @@ services:
     ports:
       - "8761:8761"
     networks:
-      - mypostgresnetwork
+      - mymysqlnetwork
 
-  postgres-container:
-    image: postgres:latest
-    container_name: postgres-container
+  mysql-container:
+    image: mysql:latest
+    container_name: mysql-container
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: userdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb  # Create a database named 'userdb'
+      MYSQL_USER: root  # Create a user 'root'
+      MYSQL_PASSWORD: root  # Set password for the user 'root'
+    ports:
+      - "3306:3306"  # Expose MySQL on port 3306
     networks:
-      - mypostgresnetwork
+      - mymysqlnetwork
 
   user-info-service:
     image: ashishdevops1989/user-info-service:36
@@ -24,8 +27,8 @@ services:
     ports:
       - "9096:9096"
     networks:
-      - mypostgresnetwork
+      - mymysqlnetwork
 
 networks:
-  mypostgresnetwork:
+  mymysqlnetwork:
     driver: bridge
