@@ -1,19 +1,15 @@
+server:
+  port: 9096
+
 spring:
+  profiles:
+    active: local
+  application:
+    name: USER-SERVICE
   datasource:
-    url: jdbc:postgresql://172.18.0.2:5432/postgres
-    username: postgres
-    password: root
-    driver-class-name: org.postgresql.Driver
-    # Increase the connection timeout
-    hikari:
-      connection-timeout: 60000  # 60 seconds timeout (default is 30000)
-      validation-timeout: 5000
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  flyway:
-    enabled: false  # Disable Flyway if you're not using it for migrations
- 
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
