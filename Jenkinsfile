@@ -185,10 +185,15 @@ pipeline {
         stage('Start PostgreSQL Container') {
             steps {
                 script {
-                    echo "Starting PostgreSQL container using Docker Compose..."
-                    // Pull the latest PostgreSQL image and start the container if it's not already running
+                    echo "Starting PostgreSQL container using Docker..."
+
+                    // Ensure network exists or create it
                     bat """
                     docker network create ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} already exists'
+                    """
+
+                    // Run PostgreSQL container if not already running
+                    bat """
                     docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
                     """
                 }
@@ -251,7 +256,7 @@ pipeline {
                 script {
                     echo "Running user-info-service container on custom network..."
 
-                    // Ensure PostgreSQL is available and network is connected
+                    // Run the user-info-service container and connect it to the custom network
                     bat """
                     docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
                     """
