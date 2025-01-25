@@ -179,18 +179,31 @@ pipeline {
             }
         }
 
-        // Step 4: Start MySQL container using Docker Compose (if not running)
-        stage('Start MySQL Container') {
-            steps {
-                script {
-                    echo "Starting MySQL container using Docker Compose..."
-                    // Pull the latest MySQL image and start the container if it's not already running
-                    bat """
-                    docker-compose -f docker-compose.yml up -d mysql
-                    """
-                }
-            }
+        // Step 4: Start PostgreSQL container using Docker Compose (if not running) 
+stage('Start PostgreSQL Container') {
+    steps {
+        script {
+            echo "Starting PostgreSQL container using Docker Compose..."
+            // Pull the latest PostgreSQL image and start the container if it's not already running
+            bat """
+            docker-compose -f docker-compose.yml up -d postgres
+            """
         }
+    }
+}
+        
+        // // Step 4: Start MySQL container using Docker Compose (if not running)
+        // stage('Start MySQL Container') {
+        //     steps {
+        //         script {
+        //             echo "Starting MySQL container using Docker Compose..."
+        //             // Pull the latest MySQL image and start the container if it's not already running
+        //             bat """
+        //             docker-compose -f docker-compose.yml up -d mysql
+        //             """
+        //         }
+        //     }
+        // }
 
         // Step 5: Stop Running Docker Container (if exists)
         stage('Stop Docker Container') {
