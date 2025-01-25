@@ -75,7 +75,7 @@ services:
       - mypostgresnetwork
 
   postgres-container:
-    image: postgres:13
+    image: postgres:latest
     container_name: postgres-container
     environment:
       POSTGRES_USER: postgres
