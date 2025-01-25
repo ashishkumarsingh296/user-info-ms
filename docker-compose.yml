@@ -26,7 +26,7 @@ services:
   app:
     image: ashishdevops1989/user-info-service
     ports:
-      - "9092:9092"
+      - "9096:9096"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
