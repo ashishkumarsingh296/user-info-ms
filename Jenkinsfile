@@ -6,12 +6,12 @@ pipeline {
         VERSION = "${env.BUILD_ID}"
         IMAGE_NAME = 'ashishdevops1989/user-info-service'
         CONTAINER_NAME = 'user-info-service-container'
-        POSTGRES_CONTAINER_NAME = 'postgres-container'
+        MYSQL_CONTAINER_NAME = 'mysql-container'  // Updated to reflect MySQL container name
         PORT = '9096'
-        POSTGRES_DB = 'userdb'
-        POSTGRES_USER = 'postgres'
-        POSTGRES_PASSWORD = 'root'
-        NETWORK_NAME = 'mypostgresnetwork' // Custom network for services
+        MYSQL_DB = 'userdb'  // MySQL database name
+        MYSQL_USER = 'root'  // MySQL user
+        MYSQL_PASSWORD = 'root'  // MySQL password
+        NETWORK_NAME = 'mymysqlnetwork'  // Custom network for services (MySQL network)
     }
 
     tools {
@@ -45,29 +45,28 @@ pipeline {
             }
         }
 
-        // Step 4: Run PostgreSQL Container (Ensure it is using the correct network)
-     stage('Run PostgreSQL Container') {
-    steps {
-        script {
-            echo "Checking if postgres-container exists..."
+        // Step 4: Run MySQL Container (Ensure it is using the correct network)
+        stage('Run MySQL Container') {
+            steps {
+                script {
+                    echo "Checking if mysql-container exists..."
 
-            // Check if the container exists
-            def containerExists = bat(script: "docker ps -aq -f name=postgres-container", returnStdout: true).trim()
+                    // Check if the container exists
+                    def containerExists = bat(script: "docker ps -aq -f name=mysql-container", returnStdout: true).trim()
 
-            // If the container doesn't exist, create and start it
-            if (containerExists.isEmpty()) {
-                echo "postgres-container does not exist. Creating and starting a new one..."
+                    // If the container doesn't exist, create and start it
+                    if (containerExists.isEmpty()) {
+                        echo "mysql-container does not exist. Creating and starting a new one..."
 
-                bat """
-                docker run -d --name postgres-container --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
-                """
-            } else {
-                echo "postgres-container already exists and is running."
+                        bat """
+                        docker run -d --name mysql-container --network ${NETWORK_NAME} -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DB} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} mysql:latest
+                        """
+                    } else {
+                        echo "mysql-container already exists and is running."
+                    }
+                }
             }
         }
-    }
-}
-
 
         // Step 5: Stop and Remove Existing Docker Containers (if necessary)
         stage('Stop & Remove Docker Containers') {
@@ -100,21 +99,22 @@ pipeline {
             }
         }
 
-stage('Run Docker Container') {
-    steps {
-        script {
-            echo "Waiting for PostgreSQL container to be ready..."
-            bat "timeout /t 30" // Wait for 30 seconds
-            echo "Running user-info-service container with PostgreSQL..."
-            
-            // Run the Spring Boot container
-            bat """
-            docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
-            """
+        // Step 8: Run Docker Container
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    echo "Waiting for MySQL container to be ready..."
+                    bat "timeout /t 30" // Wait for 30 seconds to ensure MySQL container is up and running
+                    echo "Running user-info-service container with MySQL..."
+
+                    // Run the Spring Boot container
+                    bat """
+                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
+                    """
+                }
+            }
         }
     }
-   }
-   }
 
     post {
         always {
