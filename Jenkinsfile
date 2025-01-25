@@ -97,20 +97,21 @@ pipeline {
             }
         }
 
-        // Step 8: Run Docker Container with PostgreSQL
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    echo "Running user-info-service container with PostgreSQL..."
-
-                    // Ensure PostgreSQL is available and network is connected
-                    bat """
-                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
-                    """
-                }
-            }
+stage('Run Docker Container') {
+    steps {
+        script {
+            echo "Waiting for PostgreSQL container to be ready..."
+            bat "timeout /t 30" // Wait for 30 seconds
+            echo "Running user-info-service container with PostgreSQL..."
+            
+            // Run the Spring Boot container
+            bat """
+            docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
+            """
         }
     }
+   }
+   }
 
     post {
         always {
