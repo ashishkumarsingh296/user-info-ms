@@ -202,20 +202,26 @@ pipeline {
 //     }
 // }
 
+stage('Run PostgreSQL Container') {
+    steps {
+        script {
+            echo "Checking if postgres-container exists..."
 
-        // Step 5: Start PostgreSQL container using Docker Compose (if not running)
-        stage('Start PostgreSQL Container') {
-            steps {
-                script {
-                    echo "Starting PostgreSQL container using Docker..."
+            // Stop and remove existing container if it exists
+            bat """
+            docker ps -aq -f name=postgres-container | findstr . && (
+                echo 'Stopping and removing existing postgres-container...'
+                docker stop postgres-container
+                docker rm postgres-container
+            ) || echo 'No existing postgres-container found.'
 
-                    // Pull the latest PostgreSQL image and start the container if it's not already running
-                    bat """
-                    docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
-                    """
-                }
-            }
+            // Now create and run a new container
+            docker run -d --name postgres-container --network mypostgresnetwork -e POSTGRES_PASSWORD=root -e POSTGRES_DB=postgres -e POSTGRES_USER=postgres postgres
+            """
         }
+    }
+}
+
 
         // Step 6: Stop Running Docker Container (if exists)
         stage('Stop Docker Container') {
