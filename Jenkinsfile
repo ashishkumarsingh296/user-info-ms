@@ -182,25 +182,25 @@ pipeline {
         }
 
         // Step 4: Remove and Recreate PostgreSQL Network
-        stage('Remove and Recreate Network') {
-    steps {
-        script {
-            echo "Removing and Recreating PostgreSQL Network..."
+//         stage('Remove and Recreate Network') {
+//     steps {
+//         script {
+//             echo "Removing and Recreating PostgreSQL Network..."
 
-            // Use bat script with improved error handling
-            bat """
-            docker network rm ${NETWORK_NAME}
-            if %ERRORLEVEL% NEQ 0 (
-                echo 'Network ${NETWORK_NAME} does not exist, skipping removal.'
-            )
-            docker network create ${NETWORK_NAME}
-            if %ERRORLEVEL% NEQ 0 (
-                echo 'Network ${NETWORK_NAME} already exists.'
-            )
-            """
-        }
-    }
-}
+//             // Use bat script with improved error handling
+//             bat """
+//             docker network rm ${NETWORK_NAME}
+//             if %ERRORLEVEL% NEQ 0 (
+//                 echo 'Network ${NETWORK_NAME} does not exist, skipping removal.'
+//             )
+//             docker network create ${NETWORK_NAME}
+//             if %ERRORLEVEL% NEQ 0 (
+//                 echo 'Network ${NETWORK_NAME} already exists.'
+//             )
+//             """
+//         }
+//     }
+// }
 
 
         // Step 5: Start PostgreSQL container using Docker Compose (if not running)
