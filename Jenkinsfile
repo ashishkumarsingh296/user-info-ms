@@ -46,25 +46,28 @@ pipeline {
         }
 
         // Step 4: Run PostgreSQL Container (Ensure it is using the correct network)
-        stage('Run PostgreSQL Container') {
-            steps {
-                script {
-                    echo "Checking if postgres-container exists..."
+     stage('Run PostgreSQL Container') {
+    steps {
+        script {
+            echo "Checking if postgres-container exists..."
 
-                    // Stop and remove existing container if it exists
-                    bat """
-                    docker ps -aq -f name=postgres-container | findstr . && (
-                        echo 'Stopping and removing existing postgres-container...'
-                        docker stop postgres-container
-                        docker rm postgres-container
-                    ) || echo 'No existing postgres-container found.'
+            // Check if the container exists
+            def containerExists = bat(script: "docker ps -aq -f name=postgres-container", returnStdout: true).trim()
 
-                    // Create and run a new container with the correct network
-                    docker run -d --name postgres-container --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
-                    """
-                }
+            // If the container doesn't exist, create and start it
+            if (containerExists.isEmpty()) {
+                echo "postgres-container does not exist. Creating and starting a new one..."
+
+                bat """
+                docker run -d --name postgres-container --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
+                """
+            } else {
+                echo "postgres-container already exists and is running."
             }
         }
+    }
+}
+
 
         // Step 5: Stop and Remove Existing Docker Containers (if necessary)
         stage('Stop & Remove Docker Containers') {
