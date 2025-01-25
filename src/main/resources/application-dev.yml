@@ -1,10 +1,11 @@
 eureka:
   instance:
     preferIpAddress: true
-    hostname: eureka-0
+    hostname: user-info-service-container  # (Optional) You can set this explicitly, but prefer-ip-address should be enough
   client:
     service-url:
-      defaultZone: http://eureka-0.eureka-service.default.svc.cluster.local:8761/eureka
+        defaultZone: http://eureka-service-container:8761/eureka/  # Eureka URL with container name
+      # defaultZone: http://eureka-0.eureka-service.default.svc.cluster.local:8761/eureka
 
 spring:
   datasource:
