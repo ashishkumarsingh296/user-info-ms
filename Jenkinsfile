@@ -181,26 +181,7 @@ pipeline {
             }
         }
 
-        // Step 4: Remove and Recreate PostgreSQL Network
-//         stage('Remove and Recreate Network') {
-//     steps {
-//         script {
-//             echo "Removing and Recreating PostgreSQL Network..."
 
-//             // Use bat script with improved error handling
-//             bat """
-//             docker network rm ${NETWORK_NAME}
-//             if %ERRORLEVEL% NEQ 0 (
-//                 echo 'Network ${NETWORK_NAME} does not exist, skipping removal.'
-//             )
-//             docker network create ${NETWORK_NAME}
-//             if %ERRORLEVEL% NEQ 0 (
-//                 echo 'Network ${NETWORK_NAME} already exists.'
-//             )
-//             """
-//         }
-//     }
-// }
 
 stage('Run PostgreSQL Container') {
     steps {
@@ -287,18 +268,7 @@ stage('Run PostgreSQL Container') {
             }
         }
 
-        // Step 12: Cleanup Docker Containers
-        // stage('Cleanup Docker Containers') {
-        //     steps {
-        //         script {
-        //             // Clean up PostgreSQL and user service containers after the job
-        //             bat """
-        //             docker stop ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
-        //             docker rm ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
-        //             """
-        //         }
-        //     }
-        // }
+
     }
 
     post {
