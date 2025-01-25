@@ -275,17 +275,17 @@ pipeline {
         }
 
         // Step 12: Cleanup Docker Containers
-        stage('Cleanup Docker Containers') {
-            steps {
-                script {
-                    // Clean up PostgreSQL and user service containers after the job
-                    bat """
-                    docker stop ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
-                    docker rm ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
-                    """
-                }
-            }
-        }
+        // stage('Cleanup Docker Containers') {
+        //     steps {
+        //         script {
+        //             // Clean up PostgreSQL and user service containers after the job
+        //             bat """
+        //             docker stop ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
+        //             docker rm ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
+        //             """
+        //         }
+        //     }
+        // }
     }
 
     post {
