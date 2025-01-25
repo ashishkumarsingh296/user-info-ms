@@ -9,7 +9,7 @@ eureka:
 
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-container:5432/postgres  # Use the service name 'postgres' as hostname
+    url: jdbc:postgresql://localhost:5432/postgres  # Use the service name 'postgres' as hostname
     username: postgres
     password: root
 
