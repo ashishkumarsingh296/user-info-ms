@@ -5,25 +5,19 @@ eureka:
   client:
     service-url:
       defaultZone: http://eureka-service-container:8761/eureka/  # Eureka URL with container name
-      spring:
+
+spring:
   datasource:
-    url: jdbc:postgresql://172.18.0.2:5432/postgres
+    url: jdbc:postgresql://172.18.0.2:5432/postgres  # Use the PostgreSQL container's IP address or container name
     username: postgres
     password: root
-
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # Automatically updates the database schema
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-      # defaultZone: http://eureka-0.eureka-service.default.svc.cluster.local:8761/eureka  # Uncomment if using Kubernetes
+        dialect: org.hibernate.dialect.PostgreSQLDialect  # Use the PostgreSQL dialect for Hibernate
+    show-sql: true  # Show SQL statements in logs
 
-# spring:
-#   datasource:
-#       url: jdbc:postgresql://172.18.0.2:5432/postgres 
-#     # url: jdbc:postgresql://postgres-container:5432/postgres  # Use the container name as  as hostname
-#     username: postgres
-#     password: root
-
+# Uncomment and use this for Kubernetes scenario, if applicable:
+# defaultZone: http://eureka-0.eureka-service.default.svc.cluster.local:8761/eureka  # Uncomment if using Kubernetes
