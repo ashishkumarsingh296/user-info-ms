@@ -1,22 +1,19 @@
 spring:
   datasource:
-    url: jdbc:postgresql://172.18.0.2:5432/postgres  # Use the container name in Docker network
+    url: jdbc:postgresql://postgres-container:5432/postgres
     username: postgres
     password: root
+    driver-class-name: org.postgresql.Driver
+    # Increase the connection timeout
+    hikari:
+      connection-timeout: 60000  # 60 seconds timeout (default is 30000)
+      validation-timeout: 5000
   jpa:
     hibernate:
-      ddl-auto: update  # Automatically updates the database schema
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect  # Use the PostgreSQL dialect for Hibernate
-    flyway:
-    enabled: false    
-    show-sql: true  # Show SQL statements in logs
-
-eureka:
-  instance:
-    preferIpAddress: true
-    hostname: user-info-service-container  # Set the hostname to the service container name
-  client:
-    service-url:
-      defaultZone: http://eureka-service-container:8761/eureka/  # Eureka URL with container name
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: false  # Disable Flyway if you're not using it for migrations
+ 
