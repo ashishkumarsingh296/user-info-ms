@@ -17,12 +17,12 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql-container  # You can still specify the name for convenience, but this isn't needed for the connection
+    container_name: mysql-container  # Optional, you can name your container here
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userdb
     ports:
-      - "3308:3308"
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
