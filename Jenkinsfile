@@ -101,7 +101,7 @@ stage('Run Docker Container') {
     steps {
         script {
             echo "Waiting for PostgreSQL container to be ready..."
-            bat "timeout /t 30" // Wait for 30 seconds
+            bat "timeout /t 60" // Wait for 30 seconds
             echo "Running user-info-service container with PostgreSQL..."
             
             // Run the Spring Boot container
