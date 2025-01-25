@@ -22,7 +22,7 @@ services:
       - mymysqlnetwork
 
   user-info-service:
-    image: ashishdevops1989/user-info-service:36
+    image: ashishdevops1989/user-info-service:0.0.4
     container_name: user-info-service-container
     ports:
       - "9096:9096"
