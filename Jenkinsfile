@@ -3,7 +3,8 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIAL = credentials('DOCKER-CREDENTIAL')
-        VERSION = "${env.BUILD_ID}"
+        VERSION ='0.0.4'
+        // VERSION = "${env.BUILD_ID}"
         IMAGE_NAME = 'ashishdevops1989/user-info-service'
         CONTAINER_NAME = 'user-info-service-container'
         MYSQL_CONTAINER_NAME = 'mysql-container'  // Updated to reflect MySQL container name
@@ -103,9 +104,9 @@ pipeline {
        stage('Run Docker Container') {
     steps {
         script {
-            echo "Waiting for MySQL container to be ready..."
-            bat 'ping 127.0.0.1 -n 31 > nul' // Wait for approximately 30 seconds
-            echo "Running user-info-service container with MySQL..."
+            // echo "Waiting for MySQL container to be ready..."
+            // bat 'ping 127.0.0.1 -n 31 > nul' // Wait for approximately 30 seconds
+            // echo "Running user-info-service container with MySQL..."
 
             // Run the Spring Boot container
             bat """
