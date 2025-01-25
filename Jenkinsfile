@@ -256,16 +256,32 @@ stage('Start PostgreSQL Container') {
         }
 
         // Step 10: Run Docker Container
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    // Run the user-info-service container and connect it to MySQL
-                    bat """
-                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --link ${MYSQL_CONTAINER_NAME}:mysql ${IMAGE_NAME}:${VERSION}
-                    """
-                }
-            }
+         stage('Run Docker Container') {
+    steps {
+        script {
+            // Set the custom network and PostgreSQL container name
+            def networkName = "mynetwork"
+            def postgresContainerName = "postgres-container"
+            
+            // Run the user-info-service container and connect it to the custom network
+            bat """
+            docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${networkName} ${IMAGE_NAME}:${VERSION}
+            """
         }
+    }
+}
+
+        
+        // stage('Run Docker Container') {
+        //     steps {
+        //         script {
+        //             // Run the user-info-service container and connect it to MySQL
+        //             bat """
+        //             docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --link ${MYSQL_CONTAINER_NAME}:mysql ${IMAGE_NAME}:${VERSION}
+        //             """
+        //         }
+        //     }
+        // }
 
         // Step 11: Cleanup Docker Containers
         stage('Cleanup Docker Containers') {
