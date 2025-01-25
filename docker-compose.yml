@@ -1,31 +1,29 @@
 version: '3.8'
 
 services:
-  app:
-    image: ashishdevops1989/user-info-service:0.0.1
+  user-info-service:
+    image: ashishdevops1989/user-info-service:latest
     ports:
-      - "9092:9092"
+      - "9096:9096"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3308/userdb  # Use 3308 instead of 3306
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-      - SPRING_JPA_SHOW_SQL=true
     depends_on:
       - mysql
+    networks:
+      - user-service-network
 
   mysql:
     image: mysql:8.0
-    container_name: mysql-container
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userdb
     ports:
-      - "3308:3306"  # Bind host port 3308 to MySQL container port 3306
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
+      - "3306:3306"
+    networks:
+      - user-service-network
+
+networks:
+  user-service-network:
+    driver: bridge
