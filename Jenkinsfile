@@ -256,12 +256,16 @@ stage('Start PostgreSQL Container') {
         }
 
         // Step 10: Run Docker Container
-         stage('Run Docker Container') {
+        stage('Run Docker Container') {
     steps {
         script {
-            // Set the custom network and PostgreSQL container name
-            def networkName = "mynetwork"
-            def postgresContainerName = "postgres-container"
+            // Set the custom network
+            def networkName = "mypostgresnetwork"
+            
+            // Create the network if it doesn't exist
+            bat """
+            docker network create ${networkName} || echo 'Network ${networkName} already exists'
+            """
             
             // Run the user-info-service container and connect it to the custom network
             bat """
@@ -270,6 +274,7 @@ stage('Start PostgreSQL Container') {
         }
     }
 }
+
 
         
         // stage('Run Docker Container') {
