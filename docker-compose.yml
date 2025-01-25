@@ -1,25 +1,3 @@
-
-# services:
-#   user-info-service:
-#     image: ashishdevops1989/user-info-service:latest
-#     ports:
-#       - "9096:9096"
-#     environment:
-#       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb
-#       - SPRING_DATASOURCE_USERNAME=root
-#       - SPRING_DATASOURCE_PASSWORD=root
-#     depends_on:
-#       - mysql
-
-#   mysql:
-#     image: mysql:8.0
-#     environment:
-#       MYSQL_ROOT_PASSWORD: root
-#       MYSQL_DATABASE: userdb
-#     ports:
-#       - "3307:3306"  # Note: We are exposing port 3307 on the host to avoid conflicts
-
-
 version: '3.8'
 
 services:
