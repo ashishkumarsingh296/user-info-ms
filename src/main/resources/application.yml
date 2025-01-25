@@ -9,6 +9,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect  # Use the PostgreSQL dialect for Hibernate
+    flyway:
+    enabled: false    
     show-sql: true  # Show SQL statements in logs
 
 eureka:
