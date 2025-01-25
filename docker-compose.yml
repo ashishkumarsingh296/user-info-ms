@@ -1,20 +1,54 @@
 
-services:
-  user-info-service:
-    image: ashishdevops1989/user-info-service:latest
-    ports:
-      - "9096:9096"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
-    depends_on:
-      - mysql
+# services:
+#   user-info-service:
+#     image: ashishdevops1989/user-info-service:latest
+#     ports:
+#       - "9096:9096"
+#     environment:
+#       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb
+#       - SPRING_DATASOURCE_USERNAME=root
+#       - SPRING_DATASOURCE_PASSWORD=root
+#     depends_on:
+#       - mysql
 
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: userdb
+#   mysql:
+#     image: mysql:8.0
+#     environment:
+#       MYSQL_ROOT_PASSWORD: root
+#       MYSQL_DATABASE: userdb
+#     ports:
+#       - "3307:3306"  # Note: We are exposing port 3307 on the host to avoid conflicts
+
+
+version: '3.8'
+
+services:
+  app:
+    image: ashishdevops1989/user-info-service
     ports:
-      - "3307:3306"  # Note: We are exposing port 3307 on the host to avoid conflicts
+      - "9092:9092"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_SHOW_SQL=true
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
