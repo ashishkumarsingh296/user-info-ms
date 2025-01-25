@@ -142,10 +142,12 @@ pipeline {
         VERSION = "${env.BUILD_ID}"
         IMAGE_NAME = 'ashishdevops1989/user-info-service'
         CONTAINER_NAME = 'user-info-service-container'
-        MYSQL_CONTAINER_NAME = 'mysql-container'
+        POSTGRES_CONTAINER_NAME = 'postgres-container'
         PORT = '9096'
-        MYSQL_ROOT_PASSWORD = 'root'
-        MYSQL_DATABASE = 'userdb'
+        POSTGRES_DB = 'postgres'
+        POSTGRES_USER = 'postgres'
+        POSTGRES_PASSWORD = 'root'
+        NETWORK_NAME = 'mypostgresnetwork' // Custom network for services
     }
 
     tools {
@@ -179,31 +181,19 @@ pipeline {
             }
         }
 
-        // Step 4: Start PostgreSQL container using Docker Compose (if not running) 
-stage('Start PostgreSQL Container') {
-    steps {
-        script {
-            echo "Starting PostgreSQL container using Docker Compose..."
-            // Pull the latest PostgreSQL image and start the container if it's not already running
-            bat """
-            docker-compose -f docker-compose.yml up -d postgres
-            """
+        // Step 4: Start PostgreSQL container using Docker Compose (if not running)
+        stage('Start PostgreSQL Container') {
+            steps {
+                script {
+                    echo "Starting PostgreSQL container using Docker Compose..."
+                    // Pull the latest PostgreSQL image and start the container if it's not already running
+                    bat """
+                    docker network create ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} already exists'
+                    docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres:13
+                    """
+                }
+            }
         }
-    }
-}
-        
-        // // Step 4: Start MySQL container using Docker Compose (if not running)
-        // stage('Start MySQL Container') {
-        //     steps {
-        //         script {
-        //             echo "Starting MySQL container using Docker Compose..."
-        //             // Pull the latest MySQL image and start the container if it's not already running
-        //             bat """
-        //             docker-compose -f docker-compose.yml up -d mysql
-        //             """
-        //         }
-        //     }
-        // }
 
         // Step 5: Stop Running Docker Container (if exists)
         stage('Stop Docker Container') {
@@ -257,44 +247,26 @@ stage('Start PostgreSQL Container') {
 
         // Step 10: Run Docker Container
         stage('Run Docker Container') {
-    steps {
-        script {
-            // Set the custom network
-            def networkName = "mypostgresnetwork"
-            
-            // Create the network if it doesn't exist
-            bat """
-            docker network create ${networkName} || echo 'Network ${networkName} already exists'
-            """
-            
-            // Run the user-info-service container and connect it to the custom network
-            bat """
-            docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${networkName} ${IMAGE_NAME}:${VERSION}
-            """
+            steps {
+                script {
+                    echo "Running user-info-service container on custom network..."
+
+                    // Ensure PostgreSQL is available and network is connected
+                    bat """
+                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
+                    """
+                }
+            }
         }
-    }
-}
-
-
-        
-        // stage('Run Docker Container') {
-        //     steps {
-        //         script {
-        //             // Run the user-info-service container and connect it to MySQL
-        //             bat """
-        //             docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --link ${MYSQL_CONTAINER_NAME}:mysql ${IMAGE_NAME}:${VERSION}
-        //             """
-        //         }
-        //     }
-        // }
 
         // Step 11: Cleanup Docker Containers
         stage('Cleanup Docker Containers') {
             steps {
                 script {
-                    // Stop and remove the MySQL container and the user service container after the job
+                    // Clean up PostgreSQL and user service containers after the job
                     bat """
-                    docker-compose -f docker-compose.yml down
+                    docker stop ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
+                    docker rm ${POSTGRES_CONTAINER_NAME} ${CONTAINER_NAME}
                     """
                 }
             }
@@ -302,11 +274,10 @@ stage('Start PostgreSQL Container') {
     }
 
     post {
-        // After the pipeline completes
         always {
-            // Always run the following steps, no matter what
+            // Clean up workspace after completion
             echo 'Cleaning up workspace...'
-            deleteDir()  // Clean up workspace after completion
+            deleteDir()
         }
 
         success {
@@ -315,9 +286,8 @@ stage('Start PostgreSQL Container') {
         }
 
         failure {
-            // Runs only if the pipeline failed
+            // Runs if the pipeline failed
             echo 'Pipeline failed. Please check the logs for errors.'
-            // You can add additional steps here to notify via email or Slack if needed
         }
 
         unstable {
@@ -331,4 +301,3 @@ stage('Start PostgreSQL Container') {
         }
     }
 }
-
