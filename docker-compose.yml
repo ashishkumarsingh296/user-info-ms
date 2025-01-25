@@ -6,7 +6,7 @@ services:
     ports:
       - "9092:9092"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/userdb  # Use MySQL instead of PostgreSQL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb  # Use MySQL instead of PostgreSQL
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
@@ -17,6 +17,7 @@ services:
 
   mysql:
     image: mysql:8.0
+    container_name: mysql-container  # Explicitly set container name
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userdb
