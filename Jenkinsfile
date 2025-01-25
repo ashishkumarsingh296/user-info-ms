@@ -189,7 +189,7 @@ pipeline {
                     // Pull the latest PostgreSQL image and start the container if it's not already running
                     bat """
                     docker network create ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} already exists'
-                    docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres:13
+                    docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
                     """
                 }
             }
