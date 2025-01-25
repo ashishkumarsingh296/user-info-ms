@@ -100,20 +100,21 @@ pipeline {
         }
 
         // Step 8: Run Docker Container
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    echo "Waiting for MySQL container to be ready..."
-                    bat "timeout /t 30" // Wait for 30 seconds to ensure MySQL container is up and running
-                    echo "Running user-info-service container with MySQL..."
+       stage('Run Docker Container') {
+    steps {
+        script {
+            echo "Waiting for MySQL container to be ready..."
+            bat 'ping 127.0.0.1 -n 31 > nul' // Wait for approximately 30 seconds
+            echo "Running user-info-service container with MySQL..."
 
-                    // Run the Spring Boot container
-                    bat """
-                    docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
-                    """
-                }
-            }
+            // Run the Spring Boot container
+            bat """
+            docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
+            """
         }
+    }
+}
+
     }
 
     post {
