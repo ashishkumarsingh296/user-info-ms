@@ -1,32 +1,98 @@
-version: '3.8'
+# version: '3.8'
 
+# services:
+#   app:
+#     image: ashishdevops1989/user-info-service
+#     ports:
+#       - "9096:9096"
+#     environment:
+#       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
+#       - SPRING_DATASOURCE_USERNAME=postgres
+#       - SPRING_DATASOURCE_PASSWORD=root
+#       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+#       - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+#       - SPRING_JPA_SHOW_SQL=true
+#     depends_on:
+#       - postgres
+
+#   postgres:
+#     image: postgres:13-alpine
+#     environment:
+#       - POSTGRES_DB=postgres
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=root
+#     ports:
+#       - "5432:5432"
+#     healthcheck:
+#       test: ["CMD", "pg_isready", "-U", "postgres"]
+#       interval: 10s
+#       retries: 5
+#       start_period: 30s
+#       timeout: 10s
+
+
+
+# version: '3'
+# services:
+#   eureka-service:
+#     image: ashishdevops1989/eureka-service:29
+#     container_name: eureka-service-container
+#     ports:
+#       - "8761:8761"
+#     networks:
+#       - mypostgresnetwork  # Ensure this matches the network you're using for other containers
+
+#   postgres-container:
+#     image: postgres:13
+#     container_name: postgres-container
+#     environment:
+#       POSTGRES_USER: postgres
+#       POSTGRES_PASSWORD: root
+#       POSTGRES_DB: postgres
+#     networks:
+#       - mypostgresnetwork
+
+#   user-info-service:
+#     image: ashishdevops1989/user-info-service:36
+#     container_name: user-info-service-container
+#     ports:
+#       - "9096:9096"
+#     networks:
+#       - mypostgresnetwork
+
+# networks:
+#   mypostgresnetwork:
+#     driver: bridge
+
+version: '3'
 services:
-  app:
-    image: ashishdevops1989/user-info-service
+  eureka-service:
+    image: ashishdevops1989/eureka-service:29
+    container_name: eureka-service-container
+    ports:
+      - "8761:8761"
+    networks:
+      - mypostgresnetwork
+
+  postgres-container:
+    image: postgres:13
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    networks:
+      - mypostgresnetwork
+
+  user-info-service:
+    image: ashishdevops1989/user-info-service:36
+    container_name: user-info-service-container
     ports:
       - "9096:9096"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
-      - SPRING_JPA_SHOW_SQL=true
-    depends_on:
-      - postgres
+    networks:
+      - mypostgresnetwork
 
-  postgres:
-    image: postgres:13-alpine
-    environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-    ports:
-      - "5432:5432"
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
+networks:
+  mypostgresnetwork:
+    driver: bridge
 
