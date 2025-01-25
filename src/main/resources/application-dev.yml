@@ -8,7 +8,7 @@ eureka:
 
 spring:
   datasource:
-    url: jdbc:postgresql://172.18.0.2:5432/postgres  # Use the PostgreSQL container's IP address or container name
+    url: jdbc:postgresql://localhost:5432/postgres  # Use the PostgreSQL container's IP address or container name
     username: postgres
     password: root
   jpa:
