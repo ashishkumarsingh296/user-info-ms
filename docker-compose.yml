@@ -2,31 +2,29 @@ version: '3.8'
 
 services:
   app:
-    image: ashishdevops1989/user-info-service:latest
+    image: ashishdevops1989/user-info-service:0.0.1
     ports:
       - "9092:9092"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/userdb  # Use MySQL instead of PostgreSQL
+      - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQLDialect
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect  # MySQL dialect
       - SPRING_JPA_SHOW_SQL=true
     depends_on:
-      - postgres
+      - mysql
 
-  postgres:
-    image: postgres:13-alpine
+  mysql:
+    image: mysql:8.0
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=userdb
     ports:
-      - "5432:5432"
+      - "3306:3306"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres"]
+      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
       retries: 5
       start_period: 30s
       timeout: 10s
-
