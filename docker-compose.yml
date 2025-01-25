@@ -6,7 +6,7 @@ services:
     ports:
       - "9096:9096"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/userdb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
@@ -15,13 +15,7 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=userdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: userdb
     ports:
-      - "3307:3306"  # Change the host port to 3307
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
+      - "3307:3306"  # Note: We are exposing port 3307 on the host to avoid conflicts
