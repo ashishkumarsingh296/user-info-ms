@@ -6,23 +6,23 @@ services:
     ports:
       - "9092:9092"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/userdb  # Use MySQL instead of PostgreSQL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/userdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect  # MySQL dialect
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
       - SPRING_JPA_SHOW_SQL=true
     depends_on:
       - mysql
 
   mysql:
     image: mysql:8.0
-    container_name: mysql-container  # Explicitly set container name
+    container_name: mysql-container  # You can still specify the name for convenience, but this isn't needed for the connection
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=userdb
     ports:
-      - "3308:3308"
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
