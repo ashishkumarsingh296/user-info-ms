@@ -8,7 +8,7 @@ pipeline {
         CONTAINER_NAME = 'user-info-service-container'
         POSTGRES_CONTAINER_NAME = 'postgres-container'
         PORT = '9096'
-        POSTGRES_DB = 'postgres'
+        POSTGRES_DB = 'userdb'
         POSTGRES_USER = 'postgres'
         POSTGRES_PASSWORD = 'root'
         NETWORK_NAME = 'mypostgresnetwork' // Custom network for services
