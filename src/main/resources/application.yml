@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres-container:5432/postgres  # Use the container name in Docker network
+    url: jdbc:postgresql://172.18.0.2:5432/postgres  # Use the container name in Docker network
     username: postgres
     password: root
   jpa:
