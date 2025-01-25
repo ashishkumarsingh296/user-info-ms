@@ -60,7 +60,7 @@ pipeline {
                         echo "mysql-container does not exist. Creating and starting a new one..."
 
                         bat """
-                        docker run -d --name mysql-container --network ${NETWORK_NAME} -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DB} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} mysql:latest
+                        docker run -d --name mysql-container --network ${NETWORK_NAME} -e MYSQL_ALLOW_EMPTY_PASSWORD=${MYSQL_PASSWORD} -e MYSQL_DATABASE=${MYSQL_DB} -e MYSQL_USER=${MYSQL_USER} -e MYSQL_PASSWORD=${MYSQL_PASSWORD} mysql:latest
                         """
                     } else {
                         echo "mysql-container already exists and is running."
