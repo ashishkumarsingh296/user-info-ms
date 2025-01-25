@@ -181,18 +181,28 @@ pipeline {
             }
         }
 
-        // Step 4: Start PostgreSQL container using Docker Compose (if not running)
+        // Step 4: Remove and Recreate PostgreSQL Network
+        stage('Remove and Recreate Network') {
+            steps {
+                script {
+                    echo "Removing and Recreating PostgreSQL Network..."
+
+                    // Remove the existing network (if it exists) and recreate it
+                    bat """
+                    docker network rm ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} does not exist'
+                    docker network create ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} already exists'
+                    """
+                }
+            }
+        }
+
+        // Step 5: Start PostgreSQL container using Docker Compose (if not running)
         stage('Start PostgreSQL Container') {
             steps {
                 script {
                     echo "Starting PostgreSQL container using Docker..."
 
-                    // Ensure network exists or create it
-                    bat """
-                    docker network create ${NETWORK_NAME} || echo 'Network ${NETWORK_NAME} already exists'
-                    """
-
-                    // Run PostgreSQL container if not already running
+                    // Pull the latest PostgreSQL image and start the container if it's not already running
                     bat """
                     docker run -d --name ${POSTGRES_CONTAINER_NAME} --network ${NETWORK_NAME} -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} -e POSTGRES_DB=${POSTGRES_DB} -e POSTGRES_USER=${POSTGRES_USER} postgres
                     """
@@ -200,7 +210,7 @@ pipeline {
             }
         }
 
-        // Step 5: Stop Running Docker Container (if exists)
+        // Step 6: Stop Running Docker Container (if exists)
         stage('Stop Docker Container') {
             steps {
                 script {
@@ -210,7 +220,7 @@ pipeline {
             }
         }
 
-        // Step 6: Remove Docker Container (if exists)
+        // Step 7: Remove Docker Container (if exists)
         stage('Remove Docker Container') {
             steps {
                 script {
@@ -220,7 +230,7 @@ pipeline {
             }
         }
 
-        // Step 7: Remove Docker Image (if exists)
+        // Step 8: Remove Docker Image (if exists)
         stage('Remove Docker Image') {
             steps {
                 script {
@@ -230,7 +240,7 @@ pipeline {
             }
         }
 
-        // Step 8: Build Docker Image
+        // Step 9: Build Docker Image
         stage('Build Docker Image') {
             steps {
                 script {
@@ -239,7 +249,7 @@ pipeline {
             }
         }
 
-        // Step 9: Push Docker Image
+        // Step 10: Push Docker Image
         stage('Push Docker Image') {
             steps {
                 script {
@@ -250,13 +260,13 @@ pipeline {
             }
         }
 
-        // Step 10: Run Docker Container
+        // Step 11: Run Docker Container
         stage('Run Docker Container') {
             steps {
                 script {
                     echo "Running user-info-service container on custom network..."
 
-                    // Run the user-info-service container and connect it to the custom network
+                    // Ensure PostgreSQL is available and network is connected
                     bat """
                     docker run -d --name ${CONTAINER_NAME} -p ${PORT}:${PORT} --network ${NETWORK_NAME} ${IMAGE_NAME}:${VERSION}
                     """
@@ -264,7 +274,7 @@ pipeline {
             }
         }
 
-        // Step 11: Cleanup Docker Containers
+        // Step 12: Cleanup Docker Containers
         stage('Cleanup Docker Containers') {
             steps {
                 script {
